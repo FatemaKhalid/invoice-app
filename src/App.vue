@@ -1,85 +1,114 @@
-<script setup lang="ts">
-import { RouterLink, RouterView } from 'vue-router'
-import HelloWorld from './components/HelloWorld.vue'
-</script>
-
 <template>
-  <header>
-    <img alt="Vue logo" class="logo" src="@/assets/logo.svg" width="125" height="125" />
-
-    <div class="wrapper">
-      <HelloWorld msg="You did it!" />
-
-      <nav>
-        <RouterLink to="/">Home</RouterLink>
-        <RouterLink to="/about">About</RouterLink>
-      </nav>
-    </div>
-  </header>
-
-  <RouterView />
+  <router-view />
 </template>
 
-<style scoped>
-header {
-  line-height: 1.5;
-  max-height: 100vh;
+<style lang="scss">
+@import url("https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap");
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: "Poppins", sans-serif;
+  background-color: #141625;
 }
 
-.logo {
-  display: block;
-  margin: 0 auto 2rem;
-}
-
-nav {
-  width: 100%;
+button,
+.button {
+  cursor: pointer;
+  padding: 16px 24px;
+  border-radius: 30px;
+  border: none;
   font-size: 12px;
-  text-align: center;
-  margin-top: 2rem;
+  margin-right: 8px;
+  color: #fff;
 }
 
-nav a.router-link-exact-active {
-  color: var(--color-text);
+.dark-purple {
+  background-color: #252945;
 }
 
-nav a.router-link-exact-active:hover {
-  background-color: transparent;
+.red {
+  background-color: #ec5757;
 }
 
-nav a {
-  display: inline-block;
-  padding: 0 1rem;
-  border-left: 1px solid var(--color-border);
+.purple {
+  background-color: #7c5dfa;
 }
 
-nav a:first-of-type {
-  border: 0;
+.green {
+  background-color: #33d69f;
 }
 
-@media (min-width: 1024px) {
-  header {
-    display: flex;
-    place-items: center;
-    padding-right: calc(var(--section-gap) / 2);
-  }
+.orange {
+  background-color: #ff8f00;
+}
 
-  .logo {
-    margin: 0 2rem 0 0;
-  }
+// utility classes
+.flex {
+  display: flex;
+}
 
-  header .wrapper {
-    display: flex;
-    place-items: flex-start;
-    flex-wrap: wrap;
-  }
+.flex-column {
+  flex-direction: column;
+}
 
-  nav {
-    text-align: left;
-    margin-left: -1rem;
-    font-size: 1rem;
+.container {
+  width: 100%;
+  padding: 40px 10px;
+  max-width: 850px;
+  margin: 0 auto;
 
-    padding: 1rem 0;
-    margin-top: 1rem;
+  @media (min-width: 900px) {
+    padding-top: 72px;
   }
 }
-</style>
+
+.nav-link {
+  text-decoration: none;
+  color: initial;
+}
+
+// Status Button Styling
+.status-button {
+  &::before {
+    content: "";
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    margin-right: 8px;
+  }
+
+  font-size: 12px;
+  margin-right: 30px;
+  align-items: center;
+  padding: 8px 30px;
+  border-radius: 10px;
+}
+
+.paid {
+  &::before {
+    background-color: #33d69f;
+  }
+
+  color: #33d69f;
+  background-color: rgba(51, 214, 160, 0.1);
+}
+
+.pending {
+  &::before {
+    background-color: #ff8f00;
+  }
+
+  color: #ff8f00;
+  background-color: rgba(255, 145, 0, 0.1);
+}
+
+.draft {
+  &::before {
+    background-color: #dfe3fa;
+  }
+
+  color: #dfe3fa;
+  background-color: rgba(223, 227, 250, 0.1);
+}</style>
