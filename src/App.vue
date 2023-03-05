@@ -1,16 +1,75 @@
 <template>
-  <router-view />
+  <div>
+    <div v-if="!mobile" class="flex-column app flex">
+      <NavBar />
+      <div class="app-content flex flex-column">
+        <router-view />
+      </div>
+    </div>
+    <div v-else class="mobile-message flex flex-column">
+      <h2>Sorry, this app is not supported on Mobile Devices</h2>
+      <p>To use this app, please use a computer or Tablet</p>
+    </div>
+  </div>
 </template>
-
+<script lang="ts">
+import NavBar from './components/NavigationBar.vue'
+export default {
+  components: {
+    NavBar
+  },
+  data() {
+    return {
+      mobile: false
+    }
+  },
+  created() {
+    this.checkScreen()
+  },
+  methods: {
+    checkScreen() {
+      const screenWidth = window.innerWidth
+      if (screenWidth <= 750) {
+        this.mobile = true
+      }
+    }
+  }
+}
+</script>
 <style lang="scss">
-@import url("https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap");
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap');
 
 * {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
-  font-family: "Poppins", sans-serif;
+  font-family: 'Poppins', sans-serif;
+}
+
+.app {
   background-color: #141625;
+  min-height: 100vh;
+  @media (min-width: 900px) {
+    flex-direction: row !important;
+  }
+}
+
+.app-content {
+  padding: 0 20px;
+  flex: 1;
+  position: relative;
+}
+
+.mobile-message {
+  text-align: center;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  background-color: #141625;
+  color: #fff;
+  p {
+    margin-top: 16px;
+  }
 }
 
 button,
@@ -72,7 +131,7 @@ button,
 // Status Button Styling
 .status-button {
   &::before {
-    content: "";
+    content: '';
     width: 10px;
     height: 10px;
     border-radius: 50%;
@@ -111,4 +170,5 @@ button,
 
   color: #dfe3fa;
   background-color: rgba(223, 227, 250, 0.1);
-}</style>
+}
+</style>

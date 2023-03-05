@@ -7,7 +7,7 @@
 </template>
 
 <script lang="ts">
-export default {
+export default{
 name:"navigation-bar"
 }
 </script>
