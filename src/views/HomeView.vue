@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import TheWelcome from '../components/Navigation.vue'
+import TheWelcome from '../components/NavigationBar.vue'
 </script>
 
 <template>
