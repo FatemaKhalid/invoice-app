@@ -1,6 +1,8 @@
 <template>
   <div @click="checkClick" ref="invoiceWrap" class="invoice-wrap flex flex-column">
     <form @submit.prevent="submitForm" class="invoice-content">
+      <!-- Loader -->
+      <loading v-if="loading" />
       <!-- Bill Form -->
       <div class="bill-from flex flex-column">
         <h4>Bill From</h4>
@@ -120,7 +122,8 @@
 import { mapMutations } from 'vuex'
 import { uid } from 'uid'
 import { db } from '../firebase/firebaseInit'
-import { addDoc, collection, getDocs } from 'firebase/firestore'
+import { addDoc, collection } from 'firebase/firestore'
+import loading from '../components/Loading.vue'
 type InvoiceItem = {
   itemName: string
   qty: number
@@ -153,10 +156,13 @@ type InvoiceItemData = {
 }
 type InvoiceModalData = InvoiceItemData & {
   dateOptions: Intl.DateTimeFormatOptions
-  loading: string | null
+  loading: boolean | null
 }
 export default {
   name: 'InvoiceModal',
+  components: {
+    loading
+  },
   data(): InvoiceModalData {
     return {
       dateOptions: { year: 'numeric', month: 'short', day: 'numeric' },
@@ -221,7 +227,6 @@ export default {
         total = 0
       const newInvoice = { id, itemName, qty, price, total }
       this.invoiceItemList.push(newInvoice)
-      console.log(this.invoiceItemList.length)
     },
 
     closeInvoice() {
@@ -235,6 +240,7 @@ export default {
         alert('Kindly Ensure you inserted Invoice Data')
         return
       }
+      this.loading = true
       this.calculateInvoiceTotal()
       const invoicesColl = collection(db, 'invoices')
       const newInvoice: InvoiceItemData = {
@@ -260,8 +266,9 @@ export default {
         invoiceItemList: this.invoiceItemList,
         invoiceTotal: this.invoiceTotal
       }
-      // const  invoicesSnapshot = await getDocs(invoicesColl);
+
       await addDoc(invoicesColl, newInvoice)
+      this.loading = false
       this.TOGGLE_MODAL()
     },
     checkClick() {},
