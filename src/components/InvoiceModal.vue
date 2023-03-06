@@ -117,6 +117,7 @@
 </template>
 
 <script lang="ts">
+import { mapMutations } from 'vuex'
 type InvoiceItem = {
   itemName: string
   qty: number
@@ -183,7 +184,10 @@ export default {
     submitForm() {},
     deleteItem(itemId: string) {},
     addNewInvoiceItem() {},
-    closeInvoice() {},
+    ...mapMutations(['TOGGLE_MODAL']),
+    closeInvoice() {
+      this.TOGGLE_MODAL()
+    },
     saveDraft() {},
     publishInvoice() {}
   }
