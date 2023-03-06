@@ -1,34 +1,35 @@
 <template>
-  <div class="home container"></div>
-  <!-- Header -->
-  <div class="header flex">
-    <div class="left flex flex-column">
-      <h1>Invoices</h1>
-      <span>There are 4 total invoices</span>
-    </div>
-    <div class="right flex">
-      <div @click="toggleFilterMenu" class="filter flex" ref="filter">
-        <span>Filter by status</span>
-        <img src="@/assets/icon-arrow-down.svg" alt="arrow down" />
-        <ul v-show="filterMenu" class="filter-menu">
-          <li>Draft</li>
-          <li>Pending</li>
-          <li>Paid</li>
-          <li>Clear Filter</li>
-        </ul>
+  <div class="home container">
+    <!-- Header -->
+    <div class="header flex">
+      <div class="left flex flex-column">
+        <h1>Invoices</h1>
+        <span>There are 4 total invoices</span>
       </div>
-      <div @click="newInvoices" class="button flex">
-        <div class="inner-button flex">
-          <img src="@/assets/icon-plus.svg" alt="plus icon" />
+      <div class="right flex">
+        <div @click="toggleFilterMenu" class="filter flex" ref="filter">
+          <span>Filter by status</span>
+          <img src="@/assets/icon-arrow-down.svg" alt="arrow down" />
+          <ul v-show="filterMenu" class="filter-menu">
+            <li class="filter-menu__item">Draft</li>
+            <li class="filter-menu__item">Pending</li>
+            <li class="filter-menu__item">Paid</li>
+            <li class="filter-menu__item">Clear Filter</li>
+          </ul>
         </div>
-        <span>New Invoices</span>
+        <div @click="newInvoices" class="button flex">
+          <div class="inner-button flex">
+            <img src="@/assets/icon-plus.svg" alt="plus icon" />
+          </div>
+          <span>New Invoices</span>
+        </div>
       </div>
     </div>
   </div>
 </template>
 <script lang="ts">
 export default {
-  name: 'HomeView',
+  name: 'home-view',
   components: {},
   data() {
     return {
@@ -49,7 +50,9 @@ export default {
   color: #fff;
   .header {
     margin-bottom: 65px;
-    .left,
+    .left {
+      flex: 1;
+    }
     .right {
       flex: 1;
     }
@@ -97,7 +100,7 @@ export default {
         list-style: none;
         background-color: #1e2139;
         box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
-        li {
+        .filter-menu__item {
           cursor: pointer;
           font-size: 12px;
           padding: 10px 20px;
