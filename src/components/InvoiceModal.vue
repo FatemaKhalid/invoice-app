@@ -95,7 +95,7 @@
               <img @click="deleteItem(item.id)" src="@/assets/icon-delete.svg" alt="Delete Icon" />
             </tr>
           </table>
-          <div class="flex button">
+          <div class="flex button" @click="addNewInvoiceItem">
             <img src="@/assets/icon-plus.svg" alt="" />
             Add New Item
           </div>
@@ -119,6 +119,8 @@
 <script lang="ts">
 import { mapMutations } from 'vuex'
 import { uid } from 'uid'
+import { db } from '../firebase/firebaseInit'
+import { addDoc, collection, getDocs } from 'firebase/firestore'
 type InvoiceItem = {
   itemName: string
   qty: number
@@ -126,10 +128,8 @@ type InvoiceItem = {
   total: number
   id: string
 }
-type InvoiceData = {
-  dateOptions: Intl.DateTimeFormatOptions
+type InvoiceItemData = {
   docId: string | null
-  loading: string | null
   billerStreetAddress: string | null
   billerCity: string | null
   billerZipCode: string | null
@@ -146,14 +146,18 @@ type InvoiceData = {
   paymentDueDateUnix: number | null
   paymentDueDate: string | null
   productDescription: string | null
-  invoicePending: string | null
+  invoicePending: boolean | null
   invoiceDraft: string | null
   invoiceItemList: InvoiceItem[]
   invoiceTotal: 0
 }
+type InvoiceModalData = InvoiceItemData & {
+  dateOptions: Intl.DateTimeFormatOptions
+  loading: string | null
+}
 export default {
   name: 'InvoiceModal',
-  data(): InvoiceData {
+  data(): InvoiceModalData {
     return {
       dateOptions: { year: 'numeric', month: 'short', day: 'numeric' },
       docId: null,
@@ -197,25 +201,76 @@ export default {
     }
   },
   methods: {
-    checkClick() {},
-    submitForm() {},
+    ...mapMutations(['TOGGLE_MODAL']),
     deleteItem(itemId: string) {
       this.invoiceItemList = this.invoiceItemList.filter((item) => item.id != itemId)
     },
+
+    calculateInvoiceTotal() {
+      this.invoiceTotal = 0
+      this.invoiceItemList.forEach((item) => {
+        this.invoiceTotal += item.total
+      })
+    },
+
     addNewInvoiceItem() {
       const id = uid(),
         itemName = '',
         qty = 0,
         price = 0,
         total = 0
-      this.invoiceItemList.push({ id, itemName, qty, price, total })
+      const newInvoice = { id, itemName, qty, price, total }
+      this.invoiceItemList.push(newInvoice)
+      console.log(this.invoiceItemList.length)
     },
-    ...mapMutations(['TOGGLE_MODAL']),
+
     closeInvoice() {
       this.TOGGLE_MODAL()
     },
-    saveDraft() {},
-    publishInvoice() {}
+    saveDraft() {
+      this.invoicePending = true
+    },
+    async uploadInvoice() {
+      if (this.invoiceItemList.length <= 0) {
+        alert('Kindly Ensure you inserted Invoice Data')
+        return
+      }
+      this.calculateInvoiceTotal()
+      const invoicesColl = collection(db, 'invoices')
+      const newInvoice: InvoiceItemData = {
+        docId: uid(6),
+        billerStreetAddress: this.billerStreetAddress,
+        billerCity: this.billerCity,
+        billerZipCode: this.billerZipCode,
+        billerCountry: this.billerCountry,
+        clientName: this.clientName,
+        clientEmail: this.clientEmail,
+        clientStreetAddress: this.clientStreetAddress,
+        clientCity: this.clientCity,
+        clientZipCode: this.clientZipCode,
+        clientCountry: this.clientCountry,
+        invoiceDateUnix: this.invoiceDateUnix,
+        invoiceDate: this.invoiceDate,
+        paymentTerms: this.paymentTerms,
+        paymentDueDateUnix: this.paymentDueDateUnix,
+        paymentDueDate: this.paymentDueDate,
+        productDescription: this.productDescription,
+        invoicePending: this.invoicePending,
+        invoiceDraft: this.invoiceDraft,
+        invoiceItemList: this.invoiceItemList,
+        invoiceTotal: this.invoiceTotal
+      }
+      // const  invoicesSnapshot = await getDocs(invoicesColl);
+      await addDoc(invoicesColl, newInvoice)
+      this.TOGGLE_MODAL()
+    },
+    checkClick() {},
+    submitForm() {
+      this.uploadInvoice()
+    },
+    publishInvoice() {
+      this.invoicePending = false
+    }
   }
 }
 </script>
