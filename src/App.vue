@@ -3,6 +3,7 @@
     <div v-if="!mobile" class="flex-column app flex">
       <NavBar />
       <div class="app-content flex flex-column">
+        <InvoiceModal />
         <router-view />
       </div>
     </div>
@@ -14,9 +15,11 @@
 </template>
 <script lang="ts">
 import NavBar from './components/NavigationBar.vue'
+import InvoiceModal from './components/InvoiceModal.vue'
 export default {
   components: {
-    NavBar
+    NavBar,
+    InvoiceModal
   },
   data() {
     return {
