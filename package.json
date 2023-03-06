@@ -15,7 +15,9 @@
     "format": "prettier --write src/"
   },
   "dependencies": {
+    "firebase-tools": "^11.24.0",
     "sass": "^1.58.3",
+    "uid": "^2.0.1",
     "vue": "^3.2.47",
     "vue-router": "^4.1.6",
     "vuex": "^4.0.2"

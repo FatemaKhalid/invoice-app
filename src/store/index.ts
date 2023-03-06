@@ -6,7 +6,6 @@ export default createStore({
   mutations: {
     TOGGLE_MODAL(state) {
       state.showInvoiceModal = !state.showInvoiceModal
-      console.log(state)
     }
   },
   actions: {},

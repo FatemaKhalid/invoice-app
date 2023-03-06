@@ -118,6 +118,7 @@
 
 <script lang="ts">
 import { mapMutations } from 'vuex'
+import { uid } from 'uid'
 type InvoiceItem = {
   itemName: string
   qty: number
@@ -126,7 +127,7 @@ type InvoiceItem = {
   id: string
 }
 type InvoiceData = {
-  dateOptions: { year: string; month: string; day: string }
+  dateOptions: Intl.DateTimeFormatOptions
   docId: string | null
   loading: string | null
   billerStreetAddress: string | null
@@ -139,10 +140,10 @@ type InvoiceData = {
   clientCity: string | null
   clientZipCode: string | null
   clientCountry: string | null
-  invoiceDateUnix: string | null
+  invoiceDateUnix: number | null
   invoiceDate: string | null
   paymentTerms: string | null
-  paymentDueDateUnix: string | null
+  paymentDueDateUnix: number | null
   paymentDueDate: string | null
   productDescription: string | null
   invoicePending: string | null
@@ -179,11 +180,36 @@ export default {
       invoiceTotal: 0
     }
   },
+  created() {
+    this.invoiceDateUnix = Date.now()
+    this.invoiceDate = new Date(this.invoiceDateUnix).toLocaleDateString('en-us', this.dateOptions)
+  },
+  watch: {
+    paymentTerms() {
+      const futureDate = new Date()
+      this.paymentDueDateUnix = futureDate.setDate(
+        futureDate.getDate() + parseInt(this.paymentTerms!)
+      )
+      this.paymentDueDate = new Date(this.paymentDueDateUnix).toLocaleString(
+        'en-us',
+        this.dateOptions
+      )
+    }
+  },
   methods: {
     checkClick() {},
     submitForm() {},
-    deleteItem(itemId: string) {},
-    addNewInvoiceItem() {},
+    deleteItem(itemId: string) {
+      this.invoiceItemList = this.invoiceItemList.filter((item) => item.id != itemId)
+    },
+    addNewInvoiceItem() {
+      const id = uid(),
+        itemName = '',
+        qty = 0,
+        price = 0,
+        total = 0
+      this.invoiceItemList.push({ id, itemName, qty, price, total })
+    },
     ...mapMutations(['TOGGLE_MODAL']),
     closeInvoice() {
       this.TOGGLE_MODAL()
